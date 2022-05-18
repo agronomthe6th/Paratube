@@ -1,0 +1,140 @@
+{% extends "main/base.html" %}
+
+{% load templatehelper %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<div class="container-fluid mx-auto py-5 min-vh-100 ">
+	  <div class="row d-flex justify-content-center align-items-center">
+		<div class="col col-xxl-9 ">
+			<div class="card"  style="background-color:#222">
+				{% csrf_token %}
+				<div class="rounded-top px-4 py-3 text-white d-flex flex-row border-bottom border-secondary" style="height:250px; background-color:161a1d">
+					<div class="ms-2 mt-2 d-flex flex-column text-center" style="width: 150px; height: 150px;">
+						<img src={{channel.user.profile.avatar.url}} class="justify-content-center img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">
+						<p>{{channel.user}}</p>
+					</div>
+
+					<div class="col-md-8  px-4 py-2 ms-2 mt-2">
+						<nav>
+							<div class="nav nav-tabs" id="nav-tab" role="tablist">
+								<button class="nav-link active bg-transparent" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" 
+								type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+								{% comment %} <button class="nav-link" id="totalvideos-tab" data-bs-toggle="tab" data-bs-target="#totalvideos" 
+								type="button" role="tab" aria-controls="totalvideos" aria-selected="false">Total videos</button>
+								<button class="nav-link" id="totallikes-tab" data-bs-toggle="tab" data-bs-target="#totallikes" 
+								type="button" role="tab" aria-controls="totallikes" aria-selected="false">Contact</button> {% endcomment %}
+							</div>
+						</nav>
+						<div class="tab-content p-1" id="nav-tabContent">
+							<div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+								{{ channel.user.profile.bio }}
+							</div>
+							<div class="tab-pane fade" id="totalvideos" role="tabpanel" aria-labelledby="totalvideos-tab">
+								...
+							</div>
+							<div class="tab-pane fade" id="totallikes" role="tabpanel" aria-labelledby="totallikes-tab">
+								...
+							</div>
+						</div>
+					</div>
+
+					<div class="col ">
+						{% if channel.user == request.user %}
+							<div class="col justify-content-end d-flex">
+								<button class=" m-btn-danger btn-outline-light p-1" href="{% url 'users-profile-edit' %}">
+									<a class="p-0 m-0 nav-item nav-link text-white text-nowrap" style= "text-decoration: none;" href="{% url 'users-profile-edit' %}">Edit Profile</a>
+								</button>
+								<button class="m-btn-danger btn-outline-light p-1" href="{% url 'logout' %}">
+									<a class="p-0 m-0 nav-item nav-link text-white text-nowrap" style= "text-decoration: none;" href="{% url 'logout' %}">Log out</a>
+								</button>
+							</div>
+						{% endif %}
+					</div>
+
+				</div>
+			</div>
+			<div class ="row mx-4 py-3 px-1">
+				<div class="col d-flex align-middle justify-content-start">
+				  <form class="m-0">
+				  {% with params=request.GET.urlencode %}
+					  <button class= "m-btn-danger btn-outline-light skewedr mr-0">
+						<a class = "skewedl text-white" href = "{% relative_url 'New' 'sort' params %}">
+						  New
+						</a>
+					  </button>
+					  <button class= "m-btn-danger btn-outline-light skewedr mr-0">
+						<a class = "skewedl text-white" href = "{% relative_url 'Most+viewed' 'sort' params %}">
+						  Most viewed
+						</a>
+					  </button>
+					  <button class= "m-btn-danger btn-outline-light skewedr mr-0">
+						<a class = "skewedl text-white" href = "{% relative_url 'Popular' 'sort' params %}">
+						  Popular
+						</a>
+					  </button>
+					  <span class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Date
+					  </span>
+					  <div class="dropdown-menu" aria-labelledby="navbarDropdown" style = "background-color:#060606">
+						<button class="dropdown-item border-bottom border-secondary">
+						  <a class="text-white" href="{% relative_url 'all' 'filter' params %}">
+							All
+						  </a>
+						</button>
+						<button class="dropdown-item border-bottom border-secondary">  
+						<a class="text-white" href="{% relative_url 'month' 'filter' params %}">
+						  This month
+						</a>
+					  </button>
+						<button class="dropdown-item border-bottom border-secondary">  
+						<a class="text-white" href="{% relative_url '3month' 'filter' params %}">
+						  Last 3 month
+						</a>
+					  </button>
+						<button class="dropdown-item border-bottom border-secondary">  
+						<a class="text-white" href="{% relative_url '6month' 'filter' params %}">
+						  Last 6 month
+						</a>
+					  </button>
+					  </div>
+				  {% endwith %}
+					</form>
+		  
+				</div>
+			  </div>
+		  
+			<div class="row mx-3">
+				{% if page_obj %}
+					{% for video in page_obj %}
+						{% include 'main/includes/video_view.html' %}
+					{% endfor %}
+				{% else %}
+					<p>Nothing yet</p>
+				{% endif %}
+			</div>
+			<div class ="row ">
+				<div class="col d-flex justify-content-center">
+					{% if page_obj.has_previous %}
+					  <a href="{% relative_url 1 'page' request.GET.text %}">first&nbsp;</a>
+					  <a href="{% relative_url page_obj.previous_page_number 'page' request.GET.urlencode %}">previous&nbsp;</a>
+					{% endif %}
+					<span class="current">
+						&nbsp;Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}&nbsp;
+					</span>
+					{% if page_obj.has_next %}
+					  <a  href="{% relative_url page_obj.next_page_number 'page' request.GET.urlencode %}">next&nbsp;</a>
+					  <a  href="{% relative_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">last&raquo;</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

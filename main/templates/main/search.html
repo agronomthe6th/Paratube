@@ -1,0 +1,43 @@
+{% extends "main/base.html" %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+
+    <form class="container-fluid pl-0" action="{% url 'search' %}" method="post">
+        <div class="input-group md-form form-sm ">
+            <input class="form-control my-0 py-1 red-border" type="search"  method="POST" placeholder="Search" aria-label="Search" name="search"></input>
+            <button class="btn fas fa-search" type="submit"></button>
+        </div>
+        {{ form.as_table}}
+        {% csrf_token %}
+    </form>
+
+    <div class="row m-3">
+        {% for video in most_recent_videos %}
+            <div class="col-md-4 mb-3 " style="width:25%">
+                <div class="card">
+                    {% comment %} <div class="card-header">
+                    <small class="ml-1">{{video.datetime|naturaltime }}</small>
+                    </div> {% endcomment %}
+                    <div class="card-body">
+                        <a  href="/video/{{ video.id }}/{{ 1 }}/">
+                            <img src="{{ video.thumbnailpath}}" width="100%" height="200px;"></img>
+                        </a>
+                    </div>
+                    <div class="card-footer"> 
+                        posted {{video.datetime|naturaltime }}
+                        <br> title {{video.title|truncatechars:42}}</br>
+                        {% comment %} Description	{{video.description|truncatechars:42}} {% endcomment %}
+                    </div>
+                </div>
+            </div> 
+            {% if forloop.counter|divisibleby:4 %}
+                <div class="row m-3"></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+.js-comment-content>.js-comment-urlhash {
+    color: transparent;
+    padding-left: 0;
+    font-size: 0rem;
+  }
+
+
+  #comments .user-has-reacted, #comments .user-has-flagged {
+      fill: blue;
+  }
+
+  #comments .btn-link {
+    text-decoration: none;
+    padding: 0;
+    font-size: 100%;
+    font-weight: 400;
+  }
+
+  .comment-modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: #fff;
+    pointer-events: auto;
+    background-color: grey;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
+    outline: 0;
+}
+
+.comment-modal-dialog {
+  position: relative;
+  width: auto;
+  pointer-events: none;
+  max-width: 500px;
+  margin: 1.75rem auto;
+}
+
+.show-modal {
+  opacity: 1;
+  transform: scale(1.0);
+  transition: opacity 0.25s 0s, transform 0.5s;
+}
+
+.comment-modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  display: none;
+  transform: scale(1.1);
+  transition: opacity 0.25s 0s, transform 0.75s;
+  z-index: 2000;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}

@@ -1,0 +1,61 @@
+{% extends 'main/base.html' %}
+{% load bootstrap_icons %}
+{% load static %}
+{% load humanize %}
+{% load tags %}
+
+{% block content %}
+  {% csrf_token %}
+  <div class="container-fluid min-vh-100">
+
+    {% include 'main/includes/tagsrow.html' %}
+
+    <div class="row m-3 mt-0">
+      
+      <h4>New</h4>
+        {% for video in most_recent_videos %}
+          {% include 'main/includes/video_view.html' %}
+        {% endfor %}
+      
+      <div class="row">
+        <div class="col">
+          <h4>Top viewed</h4>
+        </div>
+        <div class="col justify-content-end d-flex">
+          <a href="http://127.0.0.1:8000/catalog/?sort=New">
+            <h5 class="text-decoration-underline" style="color: #07b388; margin-top: -0.5rem;">More {% bs_icon 'arrow-right' size='1em'%}</h5>
+          </a>
+        </div>
+      </div>
+      {% for video in most_viewed_videos %}
+        {% include 'main/includes/video_view.html' %}
+      {% endfor %}
+      <div class="row">
+        <div class="col justify-content-end d-flex">
+          <a href="http://127.0.0.1:8000/catalog/?sort=Most+viewed">
+            <h5 class="text-decoration-underline" style="color: #07b388; margin-top: -0.5rem;">More {% bs_icon 'arrow-right' size='1em'%}</h5>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+        $(".gif").hover(
+            function()
+            {
+              var src = $(this).attr("src");
+              $(this).attr("src", src.replace(/\.jpg$/i, ".gif"));
+            },
+            function()
+            {
+              var src = $(this).attr("src");
+              $(this).attr("src", src.replace(/\.gif$/i, ".jpg"));
+        });
+    });
+  </script>
+
+{% endblock %}

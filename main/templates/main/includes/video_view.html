@@ -1,0 +1,67 @@
+{% load tags %}
+{% load static %}
+{% load humanize %}
+
+<div class="col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch mb-3" >
+  <div class="card bcontent flex-fill p-0 border-secondary">
+    <div class="card-body p-0">
+      <a  href="/video/{{ video.id }}">
+        <img class="gif" src="{{ video.thumbnailpath}}" width="100%" height="200px;"></img>
+      </a>
+    </div>
+    <div class = "card-footer py-0 ">
+      <div class="row " style="overflow: hidden;">
+        <div class="col-3 p-1 text-center my-auto" tyle="overflow: hidden">
+          {% if video.user %}
+            <img src={{video.user.profile.avatar.url}} class="rounded d-block img-fluid img-thumbnail">
+          {% else %}
+            <img src="{% static 'default.jpg' %}" class="rounded d-block img-fluid img-thumbnail">
+          {% endif %}
+        </div>
+        <div class="col col-sm-9 text-left" style="overflow: hidden">
+          <div class="row">
+            <p class="text-left m-0 p-0 text-nowrap">{{video.title|truncatechars:20}}</p>
+          </div>
+          <div class="row">
+            <p class="text-left m-0 p-0 text-dark text-nowrap">                   
+              {% if video.user %}
+                <a href="{% url 'users-profile-view' user=video.user %}">{{video.user}}</a>
+                
+              {% else %}
+                anon
+              {% endif %}
+            </p>
+          </div>
+          <div class="row">
+            <p class="text-left m-0 p-0 text-dark text-nowrap"> 
+              {{video.views}}
+                {%if video.views == 1 %}
+                  View
+                {%else%}
+                  Views 
+                {%endif%}
+              {{video.datetime|naturaltime|snaturaltime}}
+            </p>  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+
+<script type="text/javascript">
+  $(document).ready(function()
+  {
+      $(".gif").hover(
+          function()
+          {
+            var src = $(this).attr("src");
+            $(this).attr("src", src.replace(/\.jpg$/i, ".gif"));
+          },
+          function()
+          {
+            var src = $(this).attr("src");
+            $(this).attr("src", src.replace(/\.gif$/i, ".jpg"));
+      });
+  });
+</script>

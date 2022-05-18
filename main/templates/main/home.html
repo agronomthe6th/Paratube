@@ -1,0 +1,17 @@
+{% extends 'root/base.html' %}
+
+{% load static %}
+
+{% comment %} {% load humanize %} {% endcomment %}
+
+{% block title %} {{videos.catalog}} {% endblock %}
+
+{% block content %}
+<div class="container">
+
+  {% csrf_token %}
+
+</div>
+{% endblock %}
+
+{% load static %}

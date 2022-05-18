@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% load embed_video_tags %}
+
+{% block title %}
+Video
+{% endblock %}
+
+	<!-- video_area -->
+
+{% block content %}
+	<div class="container-fluid min-vh-100  text-center" >
+		<div class="container-fluid">
+			{% video vid.url 'large' %}
+		</div>
+		<form class="row" action="" method="POST" >
+			{% csrf_token %}
+			<div class="col">
+				<button type="submit" action="" method="POST" class="btn btn-outline-dark">--</button>
+			</div>
+			<div class="col">
+				<button type="submit" action="" method="POST" class="btn btn-outline-dark">--></button>
+			</div>
+		</div>
+	</div
+{% endblock %}
+

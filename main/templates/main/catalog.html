@@ -1,0 +1,93 @@
+{% extends "main/base.html" %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% load templatehelper %}
+
+{% load tags %}
+
+{% block content %}
+
+  <div class="container-fluid min-vh-100">
+    {% include 'main/includes/tagsrow.html' %}
+
+    {% comment %} sort tab{% endcomment %}
+
+    <div class ="row mx-4 px-1">
+      <div class="col d-flex align-middle justify-content-start">
+        <form class="border-top  border-secondary">
+        {% with params=request.GET.urlencode %}
+            <button class= "m-btn-danger btn-outline-light skewedr mr-0">
+              <a class = "skewedl text-white" href = "{% relative_url 'New' 'sort' params %}">
+                New
+              </a>
+            </button>
+            <button class= "m-btn-danger btn-outline-light skewedr mr-0">
+              <a class = "skewedl text-white" href = "{% relative_url 'Most+viewed' 'sort' params %}">
+                Most viewed
+              </a>
+            </button>
+            <button class= "m-btn-danger btn-outline-light skewedr mr-0">
+              <a class = "skewedl text-white" href = "{% relative_url 'Popular' 'sort' params %}">
+                Popular
+              </a>
+            </button>
+            <span class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Date
+            </span>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style = "background-color:#060606">
+              <button class="dropdown-item border-bottom border-secondary">
+                <a class="text-white" href="{% relative_url 'all' 'filter' params %}">
+                  All
+                </a>
+              </button>
+              <button class="dropdown-item border-bottom border-secondary">  
+              <a class="text-white" href="{% relative_url 'month' 'filter' params %}">
+                This month
+              </a>
+            </button>
+              <button class="dropdown-item border-bottom border-secondary">  
+              <a class="text-white" href="{% relative_url '3month' 'filter' params %}">
+                Last 3 month
+              </a>
+            </button>
+              <button class="dropdown-item border-bottom border-secondary">  
+              <a class="text-white" href="{% relative_url '6month' 'filter' params %}">
+                Last 6 month
+              </a>
+            </button>
+            </div>
+        {% endwith %}
+          </form>
+
+      </div>
+    </div>
+
+    {% comment %} main block {% endcomment %}
+    <div class="row m-3 mt-0">
+        {% for video in page_obj %}
+          {% include 'main/includes/video_view.html' %}
+        {% endfor %}
+    </div>
+
+    <div class ="row ">
+        <div class="col d-flex justify-content-center">
+            {% if page_obj.has_previous %}
+              <a href="{% relative_url 1 'page' request.GET.text %}">first&nbsp;</a>
+              <a href="{% relative_url page_obj.previous_page_number 'page' request.GET.urlencode %}">previous&nbsp;</a>
+            {% endif %}
+            <span class="current">
+                &nbsp;Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}&nbsp;
+            </span>
+            {% if page_obj.has_next %}
+              <a  href="{% relative_url page_obj.next_page_number 'page' request.GET.urlencode %}">next&nbsp;</a>
+              <a  href="{% relative_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">last&raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+
+  </div>
+
+{% endblock %}

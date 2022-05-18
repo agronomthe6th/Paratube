@@ -1,0 +1,166 @@
+
+@font-face {
+  font-family: "HelpMe";
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('/static/HelpMe.ttf');
+}
+
+@font-face {
+  font-family: "Lean";
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('/static/Lean.ttf');
+}
+
+@font-face {
+  font-family: "Spook";
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('/static/Spook.ttf');
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgb(80, 78, 78);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color:rgb(80, 78, 78);
+  -webkit-box-shadow: inset 0 0 6px rgba(90,90,90,0.7);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+a1 {
+  font-family : "HelpMe";
+ }
+
+a{
+  text-decoration: none;
+  color:#07b388;
+}
+
+a:hover {
+  color: #e90505;
+}
+
+.btn-link{
+  color:#07b388;
+}
+
+.btn-link:hover{
+  color:#00ffbf;
+}
+
+ .m-btn-danger {
+  border-radius: 5px;
+  color: #ffffff;
+  background-color:#7E0000;
+}
+
+.m-btn-danger:hover {
+  color: #ffffff;
+  background-color:#c40000;
+}
+
+.m-btn-danger-active {
+  color: #ffffff;
+  background-color:#c40000;
+}
+
+.skewedr {
+  transform: skew(-21deg); 
+  
+}
+
+.skewedl {
+  transform: skew(21deg); 
+  display: inline-block;
+}
+
+.videoPlayer {
+  height: 100%;
+  width:100%;
+	bottom:0;
+	left:10px;
+	/* Apply to all four sides */
+	padding: 10px;
+	margin: 10px;
+}
+
+/* .hide {
+	display: none;
+  }
+  
+  .myDIV:hover + .hide {
+	display: block;
+	color: red;
+  } */
+
+  .playbutton {
+	/* display: none; */
+	position: absolute;
+	left: 0;
+	z-index: 3;
+  }
+  .showb:hover + .playbutton {
+	display: block;
+	color: red;
+  }
+
+  .Homer {
+    height:165px;
+    width:140px;
+    background: url('/static/playbutton.png');
+    margin:auto; /*position the [div] on the center*/
+  }
+
+  .Homer:hover {
+    cursor:pointer; 
+    background:url('/static/test.gif');
+	background-size: auto;
+  }
+
+
+  .btn-tertiary {
+    color: rgb(255, 255, 255);
+    padding: 0;
+    line-height: 40px;
+    width: 300px;
+    margin: auto;
+    display: block;
+    border: 2px solid #555;
+
+  }
+
+  /* input file style */
+  .btn-outline-secondary {
+    height:100%;
+  }
+
+  .text-success {
+    font-style: italic;
+    color: white!important;
+  }
+
+  .custom-input-file{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .nowrap {
+    white-space: nowrap ;
+  }

@@ -1,0 +1,93 @@
+{% load active_link_tags %}
+{% load bootstrap_icons %}
+{% load tags %}
+{% load humanize %}
+
+{% load static %}
+<html lang="en">
+    <nav class="navbar  {% if isHome %} sticky-top {% endif %}  navbar-expand-md navbar-dark border-bottom border-secondary bg-success " style="background-color:black!important;">
+      <div class="container-fluid">
+        <div class = 'col justify-content-start '  style="margin-left:15px;">
+          <a class = "p-0 m-0 text-decoration-none" style="margin-left:30px; white-space: nowrap;" href="{% url 'home' %}">
+            <a1 class="navbar-brand m-0 p-0 "style="color:white;">Para</a1>
+            <a1 class="navbar-brand m-0 p-0" style="color:red;" >tube</a1> 
+            {% comment %} <img src="{% static 'tube.png' %}" class="img-fluid" > {% endcomment %}
+          </a>
+        </div>
+
+        <div class = 'col d-flex justify-content-end' style="margin-right:15px; ">
+          <button class="navbar-toggler " 
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarToggle"
+            aria-controls="navbarToggle" 
+            aria-expanded="false" 
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+
+        <div class="container-lg my-auto p-0" style="margin-left:15px; margin-right:15px;">
+          <form class="input-group md-form my-auto form-sm form-2 pl-0" action="{% url 'search' %}">
+            <div class="input-group md-form form-sm ">
+                <input class="form-control my-0 py-1 red-border" type="search"  value="{{search_post}}" method="POST" placeholder="Search" aria-label="Search" name="search">
+                </input>
+                <button class="btn fas fa-search text-black shadow-none"  style= "background-color:white"></button>
+            </div>
+          </form>
+        </div>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarToggle" style="margin-right:30px;">
+          <ul class="navbar-nav" style="margin-left:35px;">
+            <li class="nav-item">
+              <a class="nav-link {% if isHome%} active {% endif %} " href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% active_link 'catalog' 'active' %}" href="{% url 'catalog' %}">Catalog</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% active_link 'posts' 'active' %}" href="{% url 'posts' %}">Posts</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% active_link 'new_video' 'active' %}" href="{% url 'new_video' %}">Upload</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link dropdown-toggle {% active_link 'peep || aboutus' 'active' %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Other
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style = "background-color:#060606">
+                {% comment %} <a class="dropdown-item border-bottom border-secondary" href="{% url 'peep' %}">peep</a> {% endcomment %}
+                <a class="dropdown-item border-bottom border-secondary" href="{% url 'aboutus' %}">About us</a>
+                <a class="dropdown-item border-bottom border-secondary" href="#">Another action</a>
+              </div>
+            <li class="nav-item">
+              {% if request.user.is_authenticated  %}
+                <a class="nav-link {% if profile %} active {% endif %}" href="/profile/{{ request.user.username }}">{{ request.user.username }}</a>
+                {% comment %} <li class="nav-item dropdown-toggle pt-1" id="SubsciptionsDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {% bs_icon "bell-fill" %}
+                  </div>
+                </li> {% endcomment %}
+              {% else %} 
+                <a class="nav-link {% active_link 'login' 'active' %}" href="{% url 'login' %}">Login</a>
+              {% endif %}
+            </li>
+          </ul>		  
+        </div>
+      </div>
+    </div>
+  </nav>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+ {% comment %} <script>
+    $(document).ready(function(){
+      $.ajax({ url: "getupdates",
+              context: document.body,
+              success: function(response){
+                var updates = '{{var_name}}';
+                console.log(response);
+              }
+          });
+      });
+  </script>  {% endcomment %}
+</html>

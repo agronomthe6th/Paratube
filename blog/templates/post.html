@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %} 
+{% load comment_tags %}
+
+{% block content %}
+    <div class="container-fluid min-vh-100  d-flex justify-content-center">
+        
+        <div class="row">
+            <div class="container-md py-5">
+                <div class="border border-1 rounded-1 border-light container-sm p-4" style="background-color:#222">
+                    <div class="row">
+                        <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
+                        <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
+                        <p class="card-text ">{{ object.content | safe }}</p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    {% render_comments object request %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

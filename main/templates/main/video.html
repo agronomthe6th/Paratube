@@ -1,0 +1,413 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% load embed_video_tags %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load humanize %}
+{% load tags %}
+{% load comment_tags %}
+
+
+	{% block content %}
+    <link href="https://vjs.zencdn.net/7.18.1/video-js.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/videojs-theater-toggle.css' %}">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    {% csrf_token %}
+
+	<div class="container-fluid min-vh-100" >
+        <div class="row m-0 d-flex  justify-content-center" id='video-container' style="padding-right: 0.4rem!important;"> 
+                {% if video.embedornot != True %}
+                    <video class="video-js p-3 vjs-default-skin  vjs-big-play-centered"
+                        id="my-video"
+                        controls
+                        preload="auto"
+                        data-setup='{
+                            "controlBar": {"pictureInPictureToggle": false},
+                            "fill": true,
+                            "muted":true,
+                            "autoplay":false,
+                            "html5": {"vhs":{"overrideNative": true}}, 
+                            "nativeAudioTracks": false, 
+                            "playbackRates": [0.5, 1, 1.5, 2]}'>
+                        <source src="{{ video.path }}" type="video/mp4"></source>
+                    </video>
+                {%else%}
+                    <div class="container-fluid" style="height:72vh">
+                        {% video video.path '100% x 100%' %}
+                    </div>
+                {%endif%} 
+        </div> 
+            
+        <div class="row" style="width:80%; float:left"> 
+            <div class="row m-3">
+                <hr>
+                <div class="col-md-6">
+                    <div class = "row">
+                        <div class="col-md-auto ">
+                            {% if video.user %}
+                                <img src={{video.user.profile.avatar.url}} class="rounded d-block img-fluid img-thumbnail">
+                            {% else %}
+                                <img src="{% static 'default.jpg' %}" class="rounded d-block img-fluid img-thumbnail">
+                            {% endif %}
+                        </div>
+                        <div class="col">
+                            <h2>{{ video.title }}</h2>
+                            <h6 style='color:grey'>
+                                <i>{{  video.views}} views - Published on {{video.datetime|date:"d-m-Y" }} </i>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+                {% comment %} Subscribe {% endcomment %}
+                {% if video.user and request.user != video.user and request.user.profile %}
+                    <div class="col d-flexjustify-content-end"  align="center">
+                        <div class=" mt-3 d-flex flex-column justify-content-center" style="display: flex;">
+                            <div class="col">
+                                {% if request.user in video.user.profile.subscribers.all %}
+                                    <a class="Subscribe btn m-btn-danger" id="SubscribeButton" style="background-color:grey">
+                                        Subscribed
+                                    </a>
+                                    {% else %}
+                                        <a class="Subscribe btn m-btn-danger" id="SubscribeButton">
+                                            Subscribe
+                                        </a>
+                                {% endif %} 
+                            </div>
+                        </div>
+                    </div>
+                {% endif %} 
+                {% comment %} LIKES/DISLIKES {% endcomment %}
+                <div class="col  d-flex  justify-content-center" >
+                    <div class="mt-3 d-flex flex-column" style="display: flex;">
+                        <div class="row">
+                            {% if user.is_authenticated %}
+                                <div class="col justify-content-end d-flex min-vw-50 px-1">
+                                    {% if request.user in video.likes.all %}
+                                        <a name="Like" style="font-size:28px;color: blue;" class="likin" id="co">
+                                            {% bs_icon 'hand-thumbs-up-fill' size='1em'%}
+                                            <t name="likes_count" aria-hidden="true">{{ video.total_likes}}</t>
+                                        </a>
+                                    {% else %}
+                                        <a name="Like" style="font-size:28px;color: white;" class="likin" id="co">
+                                            {% bs_icon 'hand-thumbs-up-fill' size='1em'%}
+                                            <t name="likes_count" aria-hidden="true">{{ video.total_likes}}</t>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div class="col d-flex justify-content-start px-1">
+                                    {% if request.user in video.dislikes.all %} 
+                                        <a name="Dislike" style="font-size:28px;color: blue;" class="dislikin" id="co2">
+                                            {% bs_icon 'hand-thumbs-down-fill' size='1em'%}
+                                            <t name="dislikes_count" aria-hidden="true">{{ video.total_dislikes }}</t>
+                                        </a>
+                                    {% else %}
+                                        <a name="Dislike" style="font-size:28px;color: white;" class="dislikin" id="co2">
+                                            {% bs_icon 'hand-thumbs-down-fill' size='1em'%}
+                                            <t name="dislikes_count" aria-hidden="true">{{ video.total_dislikes }}</t>
+                                        </a>
+                                    {% endif %}  
+                                </div>  
+                                {% else %}
+                                    <p style='color:grey'>{{ video.total_likes }} likes | {{ video.total_dislikes }} dislikes</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr>
+                    {% comment %} Description {% endcomment %}
+                    <div class="row">
+                        <div class="col text-start">
+                            <b>Description:</b>
+                        </div>
+                        {% if video.description|length > 255 %}
+                            <div class="col text-end">
+                                <a class="btn btn-primary bg-transparent shadow-none text-decoration-underline" style="border: 0 !important;" id = "show" onclick="toggleText()" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    Show more  
+                                    {% comment %} {% bs_icon 'caret-down-fill' size='1em'%} {% endcomment %}
+                                </a>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <div class="short-text" id="short-text" style>
+                                <p>{{ video.description|truncatechars:255 }}</p>
+                            </div>
+                            <div class="visually-hidden" id="long-text">
+                                <p>{{ video.description }}</p>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <p class="mb-0">
+                          <form class="mb-0"  action="{% url 'search' %}">
+                            {% for tag in video.tags.all %}
+                                <label class="my-2">
+                                  <button 
+                                    value="{{tag}}" 
+                                    method="POST" 
+                                    name="search" 
+                                    id="id_{{tag}}"
+                                    class="m-btn-danger border-0 px-3 py-2 " 
+                                    style="border-radius: 20px;">
+                                        {{tag}} 
+                                  </button>
+                                </label>
+                            {% endfor %} 
+                          </form>
+                        <p>
+                    </div>
+                    {% comment %} Comments {% endcomment %}
+                    <h3>Comments</h3>
+                    {% render_comments video request %}
+
+                </div>
+            </div>
+            {% comment %} infinite {% endcomment %}
+            <div class="col-sm-3 infinite-container py-3 d-none d-lg-block" id="infinite-relative" style="width:20%; margin-top:0vh; float: right;">
+                {% for video in page_obj %}
+                <div class="col d-flex infinite-item align-items-stretch mb-3" >
+                    <div class="card bcontent flex-fill p-0 border-secondary">
+                      <div class="card-body p-0">
+                        <a  href="/video/{{ video.id }}">
+                          <img class="gif" src="{{ video.thumbnailpath}}" width="100%" height="200px;"></img>
+                        </a>
+                      </div>
+                      <div class = "card-footer py-0 ">
+                        <div class="row " style="overflow: hidden;">
+                          <div class="col-3 p-1 text-center my-auto" tyle="overflow: hidden">
+                            {% if video.user %}
+                              <img src={{video.user.profile.avatar.url}} class="rounded d-block img-fluid img-thumbnail">
+                            {% else %}
+                              <img src="{% static 'default.jpg' %}" class="rounded d-block img-fluid img-thumbnail">
+                            {% endif %}
+                          </div>
+                          <div class="col col-sm-9 text-left" style="overflow: hidden">
+                            <div class="row">
+                              <p class="text-left m-0 p-0 text-nowrap">{{video.title|truncatechars:20}}</p>
+                            </div>
+                            <div class="row">
+                              <p class="text-left m-0 p-0 text-dark text-nowrap">                   
+                                {% if video.user %}
+                                    <a href="{% url 'users-profile-view' user=video.user %}">{{video.user}}</a>
+                                {% else %}
+                                    anon    
+                                {% endif %}
+                              </p>
+                            </div>
+                            <div class="row">
+                              <p class="text-left m-0 p-0 text-dark text-nowrap"> 
+                                {{video.views}}
+                                  {%if video.views == 1 %}
+                                    View
+                                  {%else%}
+                                    Views 
+                                  {%endif%}
+                                {{video.datetime|naturaltime|snaturaltime}}
+                              </p>  
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+                {% endfor %}
+            </div>
+
+            <div class="loading position-fixed " style="top:10vh;left:50vw;display:none">
+                <button class="btn btn-primary loading border-dark" style="background-color:#222">
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Please wait...
+                </button>
+            </div>
+
+            {% if page_obj.has_next %}
+                <div class="row">
+                    <div class="col-12">
+                            <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div id="endpoint-url-div" url="{% url 'video' video.id%}" clas="d-none"></div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/infinite.min.js' %}"></script> 
+
+    <script type="text/javascript">
+        var endpoint = document.getElementById('endpoint-url-div').getAttribute('url');
+        // Like CALL
+        $('.likin').click(function(){
+            $.ajax({
+                type: "POST",
+                url: endpoint,
+                data: {'video_id': $(this).attr('name'),'operation':'like_submit','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                dataType: "json",
+                success: function(response) {
+                    selector = document.getElementsByName('Like');
+                    selector2 = document.getElementsByName('likes_count');
+                    selector3 = document.getElementsByName('Dislike');
+                    selector4 = document.getElementsByName('dislikes_count');
+                        if(response.liked==true){
+                            $(selector).css("color","blue");
+                            $(selector3).css("color","white");
+                            $(selector2).contents()[0].textContent = response.likes_count;
+                            $(selector4).contents()[0].textContent = response.dislikes_count;
+                        }
+                        else if(response.liked==false){
+                            $(selector).css("color","white");
+                            $(selector2).contents()[0].textContent = response.likes_count;
+                            $(selector4).contents()[0].textContent = response.dislikes_count;
+                        }
+
+                    }
+                });
+            })
+    </script>
+      
+    <script  type="text/javascript">
+        // Dislike CALL
+        var endpoint = document.getElementById('endpoint-url-div').getAttribute('url');
+        $('.dislikin').click(function(){
+            $.ajax({
+                type: "POST",
+                url: endpoint,
+                data: {'video_id': $(this).attr('name'),'operation':'dislike_submit','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                dataType: "json",
+                success: function(response) {
+                    selector4 = document.getElementsByName('dislikes_count');
+                    selector3 = document.getElementsByName('Like');
+                    selector2 = document.getElementsByName('likes_count');
+                    selector = document.getElementsByName('Dislike');
+                        if(response.disliked==true){
+                            $(selector).css("color","blue");
+                            $(selector3).css("color","white");
+                            $(selector2).contents()[0].textContent = response.likes_count;
+                            $(selector4).contents()[0].textContent = response.dislikes_count;
+                        }
+                        else if(response.disliked==false){
+                            $(selector).css("color","white");
+                            $(selector2).contents()[0].textContent = response.likes_count;
+                            $(selector4).contents()[0].textContent = response.dislikes_count;
+
+                        }
+                    }
+                });
+            })
+    </script>
+
+    <script  type="text/javascript">
+        function toggleText() {
+            var link = document.getElementById('short-text');
+            var link2 = document.getElementById('long-text');
+            var button = document.getElementById('show');
+            if (link2.className == 'visually-hidden') {
+                link.className ='visually-hidden';
+                link2.className = 'row';
+                button.innerHTML = 'Show less'; 
+            } else {
+                link.className ='row';
+                link2.className = 'visually-hidden';
+                button.innerHTML = 'Show more';
+            }
+        }
+    </script> 
+
+    <script type="text/javascript">
+        var endpoint = document.getElementById('endpoint-url-div').getAttribute('url');
+        // Subscribe CALL
+        $('.Subscribe').click(function(){
+            $.ajax({
+                type: "POST",
+                url: endpoint,
+                data: {'operation':'Subscribe','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                dataType: "json",
+                success: function(response) {
+                        selector = document.getElementById('SubscribeButton');
+                        if(response.subscribed==true){
+                            $(selector).css('background-color',"grey");
+                            $(selector).text("Subscribed");
+                        }
+                        else if(response.subscribed==false){
+                            $(selector).text("Subscribe");
+                            $(selector).css('background-color',"#7E0000");
+                            
+                        }
+                    }
+                });
+            })
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            $(".gif").hover(
+                function()
+                {
+                  var src = $(this).attr("src");
+                  $(this).attr("src", src.replace(/\.jpg$/i, ".gif"));
+                },
+                function()
+                {
+                  var src = $(this).attr("src");
+                  $(this).attr("src", src.replace(/\.gif$/i, ".jpg"));
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        var infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+
+            onBeforePageLoad: function () {
+                $('.loading').show();
+            },
+            onAfterPageLoad: function () {
+                $('.loading').hide();
+            }
+
+        });
+    </script>
+
+    {% if video.embedornot != True %}
+        <script type="text/javascript" src="https://vjs.zencdn.net/7.18.1/video.min.js"></script>
+        {% comment %} <link rel="stylesheet" href="//path/to/videojs-theater-toggle.css"> {% endcomment %}
+        <script src="{% static 'js/videojs-theater-toggle.min.js' %}"></script>
+        <script>
+        (function(window, videojs) {
+            var video = document.getElementById('video-container');
+            var icontainer = document.getElementById('infinite-relative');
+            var player = window.player = videojs('my-video');
+            player.theaterToggle({
+            "saveTheaterState" : true,
+            "localItemName" : 'theaterVideoState'
+            });
+            player.on("theaterMode",function(){
+            if(player.theaterToggle().isTheater()){
+                video.style.width = "100%"
+                video.style.height = "82vh"
+                icontainer.style.marginTop = "0";
+            }else {
+                video.style.width = "80%"
+                video.style.height = "70vh"
+                icontainer.style.marginTop = "-70vh";
+
+            }
+            });
+        }(window, window.videojs));
+        </script>
+        {%else%}
+            <script>
+                window.onload = function() {
+                    var icontainer = document.getElementById('infinite-relative');
+                    icontainer.style.marginTop = "0";
+                }
+            </script>
+    {% endif %}
+
+{% endblock %}
+

@@ -1,0 +1,111 @@
+{% load bootstrap_icons %}
+{% load tags %}
+
+<div class="row" >
+    <div class="col-xs-12 p-0 m-0 d-flex justify-content-start bg-transparent" style="width: auto;">  
+        <button class="btn btn-circle " onclick="RotateL()"><i class="fa fa-chevron-left" style="background:transparent"></i></button>
+    </div>
+    <div class="col-sm-2 flex-fill overflow-hidden border-secondary px-4 m-0" style="white-space: nowrap;" id="tagsrow">
+        <div class="row p-0 my-auto">  
+            <form class="mb-0" action="{% url 'search' %}">
+                {% for tag in tags %}
+                    <label class="my-2">
+                    <button 
+                        value="{{tag}}" 
+                        method="POST" 
+                        name="search" 
+                        id="id_{{tag}}"
+                        class="m-btn-danger border-0 px-3 py-2 " 
+                        style="border-radius: 20px;">
+                        {{tag}} 
+                    </button>
+                    </label>
+                {% endfor %} 
+            </form>
+        </div> 
+    </div>
+    <div class="col-xs-12 p-0 m-0 d-flex justify-content-end bg-transparent" style="width: auto;">  
+        <button class=" btn btn-circle" onclick="RotateR()"><i class="fa fa-chevron-right" style=""></i></button>
+    </div>
+</div>
+  <link href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" rel="stylesheet" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<script>
+  $('#tagsrow').bind('mousewheel DOMMouseScroll', function(e) {
+    var scrollTo = null;
+
+    if (e.type == 'mousewheel') {
+        scrollTo = (e.originalEvent.wheelDelta * -1);
+    }
+    else if (e.type == 'DOMMouseScroll') {
+        scrollTo = 40 * e.originalEvent.detail;
+    }
+
+    if (scrollTo) {
+        e.preventDefault();
+        $(this).scrollLeft(scrollTo + $(this).scrollLeft());
+    }
+  })
+</script>
+
+<script>
+  function RotateR() {
+    document.getElementById("tagsrow").scrollBy({
+      top: 0,
+      left: 169,
+      behavior: "smooth"
+    })
+  }
+</script>
+
+<script>
+  function RotateL() {
+    document.getElementById("tagsrow").scrollBy({
+      top: 0,
+      left: -169,
+      behavior: 'smooth'
+    })
+  }
+</script>
+
+<script type="text/javascript">
+  function AddTag(tag) {
+    $.ajax({
+      type: "GET",
+      url: "search",
+      data: {
+          "search": tag,
+      },
+      success: function (data) {
+          console.log("success");
+          console.log(data);
+      },
+      failure: function (data) {
+          console.log("failure");
+          console.log(data);
+        },
+    });
+  }
+</script>
+
+<script type="text/javascript">
+  function AddTag(tag) {
+    $.ajax({
+      type: "GET",
+      url: "search",
+      data: {
+          "search": tag,
+      },
+      success: function (data) {
+          console.log("success");
+          console.log(data);
+      },
+      failure: function (data) {
+          console.log("failure");
+          console.log(data);
+        },
+    });
+  }
+</script>

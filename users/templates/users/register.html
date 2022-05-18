@@ -1,0 +1,69 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 ">
+    <div class="form-content  my-3 p-3 ">
+            <div class="row d-flex justify-content-center ">
+                <div class="col-md-4">
+                    <div class="card shadow-lg rounded-lg mt-0 mb-5 " >
+                        <div class="card-header ">
+                        	<h3 class="font-weight-light my-4 text-center">Create Account</h3>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <div id="form_errors">
+                                            {% for key, value in form.errors.items %}
+                                                <strong>{{ value }}</strong>
+                                            {% endfor %}
+                                        </div>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                                <div class="form-group ">
+                                            <div class="form-group">
+                                                <label class="small mb-1">Username</label>
+                                                {{ form.username }}
+                                        </div>
+                                            <div class="form-group">
+                                                <label class="small mb-1">Email</label>
+                                                {{ form.email }}
+                                            </div>
+                                    </div>
+                                        <div class="form-group">
+                                            <label class="small mb-1">Password</label>
+                                            {{ form.password1 }}
+                                            {{ form.errors.password }}
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="small mb-1">Confirm Password</label>
+                                            {{ form.password2 }}
+                                        </div>
+                                        <div class="form-row mt-4 mb-0">
+                                            <button type="submit" class="col-md-12 m-btn-danger btn-block btn-outline-light">Sign Up</button><br><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center">
+                            <div class="row">
+                                <a href="{% url 'login' %}">Already have an account? Sign in</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://unpkg.com/bootstrap-show-password@1.2.1/dist/bootstrap-show-password.min.js"></script>
+
+{% endblock content %}

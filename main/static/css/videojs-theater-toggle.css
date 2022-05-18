@@ -1,0 +1,23 @@
+.vjs-theater-container-button {
+	cursor: pointer;
+}
+.vjs-theater-container-button span {
+    color: transparent;
+    border: 2.3px solid white;
+    font-size:  .5em;
+    padding-top: .5em;
+
+}
+/*.vjs-theater-container-button {
+	margin-bottom: .3em;
+}*/
+.vjs-theater-container-button.theater-toggled {
+	position: relative;
+}
+
+.vjs-theater-container-button.theater-toggled span {
+	font-size: .3em !important;
+	position: absolute;
+	top: calc(50% - 1.3em);
+	left: 0;
+}
